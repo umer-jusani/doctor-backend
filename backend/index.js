@@ -1,30 +1,33 @@
-import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import mongoose from "mongoose";
-import dotenv from "dotenv"
+import dotenv from "dotenv";
+import express from "express";
+import { connectDB } from "./db/db.js";
+import authRoutes from "./Routes/auth-routes.js";
 
 // loading all the environments variables
 dotenv.config()
-
+const URI = process.env.MONGO_URL
 
 const app = express();
 const port = process.env.PORT || 8000;
+
 
 const corsOptions = {
     origin: true
 }
 
-
 // middleware
 app.use(express.json());
 app.use(cookieParser())
-app.use(cors(corsOptions))
+app.use(cors(corsOptions));
+app.use("api/v1/auth", authRoutes)
 
 app.get("/", (req, res) => {
     res.send("Apis is working")
 });
 
 app.listen(port, () => {
+    connectDB(URI);
     console.log("server is running on this port " + port)
 })
