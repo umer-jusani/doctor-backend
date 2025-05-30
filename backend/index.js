@@ -4,6 +4,8 @@ import dotenv from "dotenv";
 import express from "express";
 import { connectDB } from "./db/db.js";
 import authRoutes from "./Routes/auth-routes.js";
+import userRoutes from "./Routes/user-routes.js";
+import doctorRoutes from "./Routes/doctor-routes.js";
 
 // loading all the environments variables
 dotenv.config()
@@ -21,7 +23,11 @@ const corsOptions = {
 app.use(express.json());
 app.use(cookieParser())
 app.use(cors(corsOptions));
+
+// routes
 app.use("/api/v1/auth", authRoutes)
+app.use("/api/v1/users", userRoutes)
+app.use("/api/v1/doctors", doctorRoutes)
 
 app.get("/", (req, res) => {
     res.send("Apis is working")
