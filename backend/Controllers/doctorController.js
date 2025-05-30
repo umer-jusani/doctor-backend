@@ -41,10 +41,19 @@ export const getSingleUser = async (req, res) => {
 
 export const getAllUsers = async (req, res) => {
     const id = req.params.id;
+    const { query } = req.query
+    let doctors;
 
     try {
-        const users = await doctorSchema.find({}).select("-password");
-        res.status(200).json({ success: true, message: "Users Found", data: users })
+
+        if (query) {
+            doctors = doctorSchema.find({ $or: [{ name: { $regex: query, $options: "i" } }] })
+        }
+        else {
+            doctors = await doctorSchema.find({}).select("-password");
+        }
+
+        res.status(200).json({ success: true, message: "Users Found", data: doctors })
 
     } catch (error) {
         res.status(500).json({ success: false, message: "Failed to found Users" })
